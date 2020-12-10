@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scale_more_peele">去皮</string>
+    <string name="scale_more_clear_peele">清皮</string>
+    <string name="scale_more_clear">清零</string>
+
+    <string name = "scale_tips_clearfail">清皮失败，毛重不为0</string>
+</resources>

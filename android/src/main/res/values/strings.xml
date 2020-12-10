@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scale_more_peele">Tare</string>
+    <string name="scale_more_clear_peele">Clear tare</string>
+    <string name="scale_more_clear">Zero-setting</string>
+
+    <string name = "scale_tips_clearfail">Failed to clear tare , gross weight does not equal to 0.</string>
+</resources>
