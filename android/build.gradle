@@ -51,5 +51,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compileOnly(name: 'scale-service-part-lib1.2', ext: 'jar')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // compileOnly(name: 'scale-service-part-lib1.2', ext: 'jar')
 }

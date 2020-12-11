@@ -15,11 +15,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  static const EventChannel eventChannel = EventChannel(FlutterSunmiScale.EVENT_CHANNEL_NAME);
+  SunmiScaleData scaleData = null;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    eventChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -42,6 +45,20 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _onEvent(dynamic data) {
+    data = new Map<String, dynamic>.from(data);
+    setState(() {
+      scaleData = SunmiScaleData.fromJson(data);
+    });
+  }
+
+  void _onError(Object error) {
+    setState(() {
+      PlatformException exception = error;
+      scaleData = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,7 +67,12 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Row(
+            children: [
+              Text('Running on: $_platformVersion\n'),
+              Text('重量：${scaleData?.net}')
+            ],
+          ),
         ),
       ),
     );

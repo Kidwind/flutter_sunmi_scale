@@ -1,6 +1,8 @@
 package com.food_court.flutter_sunmi_scale
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.os.RemoteException
 import android.util.Log
 import android.widget.Toast
@@ -9,8 +11,10 @@ import com.sunmi.scalelibrary.ScaleManager.ScaleServiceConnection
 import com.sunmi.scalelibrary.ScaleResult
 import java.text.DecimalFormat
 
+
 class FlutterSunmiScaleModule(val context: Context, val callback: ScalePresenterCallback) {
     private val decimalFormat = DecimalFormat("0.000")
+    private val uiThreadHandler = Handler(Looper.getMainLooper())
 
     private var mScaleManager: ScaleManager? = null
     private var isScaleSuccess: Boolean = false
@@ -60,14 +64,14 @@ class FlutterSunmiScaleModule(val context: Context, val callback: ScalePresenter
                 tare = p1
                 isStable = p2
 
-                callback.getData(p0, p1, p2);
+                uiThreadHandler.post { callback.getData(p0, p1, p2) }
 
                 if (isScaleSuccess) {
                     return
                 }
 
                 isScaleSuccess = true
-                callback.isScaleCanUse(true)
+                uiThreadHandler.post { callback.isScaleCanUse(true) }
             }
 
             override fun getStatus(p0: Boolean, p1: Boolean, p2: Boolean, p3: Boolean) {

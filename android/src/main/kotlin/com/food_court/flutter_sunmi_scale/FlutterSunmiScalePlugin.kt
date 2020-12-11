@@ -29,16 +29,17 @@ class FlutterSunmiScalePlugin : FlutterPlugin, MethodCallHandler, EventChannel.S
         flutterSunmiScaleModule = FlutterSunmiScaleModule(flutterPluginBinding.applicationContext, object : FlutterSunmiScaleModule.ScalePresenterCallback {
             override fun getData(net: Int, tare: Int, isStable: Boolean) {
                 eventSink?.success(mapOf(
-                        flutterSunmiScaleModule.net to "net",
-                        flutterSunmiScaleModule.tare to "tare",
-                        flutterSunmiScaleModule.isStable to "isStable"
+                        "net" to flutterSunmiScaleModule.net,
+                        "tare" to flutterSunmiScaleModule.tare,
+                        "isStable" to flutterSunmiScaleModule.isStable
                 ))
             }
 
             override fun isScaleCanUse(isCan: Boolean) {
-                TODO("Not yet implemented")
+
             }
         });
+        flutterSunmiScaleModule.connectScaleService()
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -46,9 +47,9 @@ class FlutterSunmiScalePlugin : FlutterPlugin, MethodCallHandler, EventChannel.S
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         } else if (call.method == GET_DATA) {
             result.success(mapOf(
-                    flutterSunmiScaleModule.net to "net",
-                    flutterSunmiScaleModule.tare to "tare",
-                    flutterSunmiScaleModule.isStable to "isStable"
+                    "net" to flutterSunmiScaleModule.net,
+                    "tare" to flutterSunmiScaleModule.tare,
+                    "isStable" to flutterSunmiScaleModule.isStable
             ));
         } else {
             result.notImplemented()
