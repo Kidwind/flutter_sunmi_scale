@@ -18,6 +18,10 @@ class FlutterSunmiScalePlugin : FlutterPlugin, MethodCallHandler, EventChannel.S
     private lateinit var flutterSunmiScaleModule: FlutterSunmiScaleModule
 
     private val GET_DATA = "getData"
+    private val ZERO = "zero"
+    private val TARE = "tare"
+    private val SET_NUM_TARE = "setNumTare"
+    private val CLEAR_TARE = "clearTare"
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
@@ -27,30 +31,47 @@ class FlutterSunmiScalePlugin : FlutterPlugin, MethodCallHandler, EventChannel.S
         eventChannel.setStreamHandler(this)
 
         flutterSunmiScaleModule = FlutterSunmiScaleModule(flutterPluginBinding.applicationContext, object : FlutterSunmiScaleModule.ScalePresenterCallback {
-            override fun getData(net: Int, tare: Int, isStable: Boolean) {
+            override fun getData(scaleData: FlutterSunmiScaleModule.ScaleData) {
                 eventSink?.success(mapOf(
-                        "net" to flutterSunmiScaleModule.net,
-                        "tare" to flutterSunmiScaleModule.tare,
-                        "isStable" to flutterSunmiScaleModule.isStable
+                        "isCanUse" to scaleData.isCanUse,
+
+                        "net" to scaleData.net,
+                        "tare" to scaleData.tare,
+                        "isStable" to scaleData.isStable,
+
+                        "isLightWeight" to scaleData.isLightWeight,
+                        "overload" to scaleData.overload,
+                        "clearZeroErr" to scaleData.clearZeroErr,
+                        "calibrationErr" to scaleData.calibrationErr
                 ))
-            }
-
-            override fun isScaleCanUse(isCan: Boolean) {
-
             }
         });
         flutterSunmiScaleModule.connectScaleService()
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        if (call.method == "getPlatformVersion") {
-            result.success("Android ${android.os.Build.VERSION.RELEASE}")
-        } else if (call.method == GET_DATA) {
+        if (call.method == GET_DATA) {
+            val scaleData = flutterSunmiScaleModule.scaleData;
             result.success(mapOf(
-                    "net" to flutterSunmiScaleModule.net,
-                    "tare" to flutterSunmiScaleModule.tare,
-                    "isStable" to flutterSunmiScaleModule.isStable
+                    "isCanUse" to scaleData.isCanUse,
+
+                    "net" to scaleData.net,
+                    "tare" to scaleData.tare,
+                    "isStable" to scaleData.isStable,
+
+                    "isLightWeight" to scaleData.isLightWeight,
+                    "overload" to scaleData.overload,
+                    "clearZeroErr" to scaleData.clearZeroErr,
+                    "calibrationErr" to scaleData.calibrationErr
             ));
+        } else if (call.method == ZERO) {
+            flutterSunmiScaleModule.zero()
+        } else if (call.method == TARE) {
+            flutterSunmiScaleModule.tare()
+        } else if (call.method == SET_NUM_TARE) {
+            call.argument<Int>("numTare")?.let { flutterSunmiScaleModule.setNumTare(it) }
+        } else if (call.method == CLEAR_TARE) {
+            flutterSunmiScaleModule.clearTare()
         } else {
             result.notImplemented()
         }
