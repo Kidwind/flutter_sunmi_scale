@@ -13,6 +13,8 @@ import java.text.DecimalFormat
 
 
 class FlutterSunmiScaleModule(val context: Context, val callback: ScalePresenterCallback) {
+    val TAG = "SUNMI_SCALE"
+
     private val decimalFormat = DecimalFormat("0.000")
     private val uiThreadHandler = Handler(Looper.getMainLooper())
 
@@ -55,7 +57,7 @@ class FlutterSunmiScaleModule(val context: Context, val callback: ScalePresenter
         mScaleManager!!.getData(object : ScaleResult() {
             override fun getResult(p0: Int, p1: Int, p2: Boolean) {
                 // p0 = 净重量 单位 克 ，p1 = 皮重量 单位 克 ，p2 = 稳定状态。具体其他状态请参考商米开发者文档
-                Log.d("SUNMI",
+                Log.d(TAG,
                         "update: -----------------> 净重：" + decimalFormat.format((p0 * 1.0f / 1000).toDouble()) +
                                 ", 皮重：" + decimalFormat.format((p1 * 1.0f / 1000).toDouble()) +
                                 ", 稳定：" + (if (p2) "稳定" else "不稳定")
